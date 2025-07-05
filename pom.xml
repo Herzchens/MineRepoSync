@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>me.Herzchen</groupId>
+    <artifactId>MineRepoSync</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>MineRepoSync</name>
+    <description>Minecraft plugin for synchronizing plugin data from Git repositories</description>
+    <url>https://github.com/Herzchen/SkyblockLOL</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <!-- Dependency versions -->
+        <spigot.version>1.18.2-R0.1-SNAPSHOT</spigot.version>
+        <jgit.version>7.2.1.202505142326-r</jgit.version>
+        <snakeyaml.version>2.0</snakeyaml.version>
+        <shade.plugin.version>3.3.0</shade.plugin.version>
+        <guava.version>32.0.1-android</guava.version>
+    </properties>
+
+    <repositories>
+        <!-- PaperMC Repository -->
+        <repository>
+            <id>papermc-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+
+        <!-- JCenter Mirror -->
+        <repository>
+            <id>jcenter</id>
+            <url>https://jcenter.bintray.com/</url>
+        </repository>
+
+        <!-- Google Mirror -->
+        <repository>
+            <id>google-maven</id>
+            <url>https://maven.google.com/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Spigot API -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${spigot.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.yaml</groupId>
+                    <artifactId>snakeyaml</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- JGit -->
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>${jgit.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- SnakeYAML -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
+        </dependency>
+
+        <!-- Guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <compilerArgs>
+                        <arg>-Xlint:unchecked</arg>
+                        <arg>-Xlint:deprecation</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${shade.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.eclipse.jgit</pattern>
+                                    <shadedPattern>me.Herzchen.minereposync.shaded.jgit</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google.common</pattern>
+                                    <shadedPattern>me.Herzchen.minereposync.shaded.guava</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google.thirdparty</pattern>
+                                    <shadedPattern>me.Herzchen.minereposync.shaded.guava.thirdparty</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.yaml.snakeyaml</pattern>
+                                    <shadedPattern>me.Herzchen.minereposync.shaded.snakeyaml</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/maven/**</exclude>
+                                        <exclude>META-INF/services/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>me.Herzchen.minereposync.MineRepoSync</mainClass>
+                        </manifest>
+                    </archive>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <finalName>${project.artifactId}-${project.version}</finalName>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>*.yml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+</project>

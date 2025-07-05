@@ -1,0 +1,8 @@
+logs:
+# Mẫu entry log
+# - timestamp: 2025-07-04T12:30:45.123Z
+#   command: update
+#   executor: Herzchen
+#   status: success
+#   changed_plugins: ["MMOItem", "MythicMob"]
+#   error: ""

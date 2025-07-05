@@ -1,0 +1,9 @@
+name: MineRepoSync
+version: 1.0.0
+main: me.Herzchen.minereposync.MineRepoSync
+api-version: 1.18
+commands:
+  reposync:
+    description: Manage repository synchronization
+    aliases: [rsync]
+    usage: /reposync [update|reload]

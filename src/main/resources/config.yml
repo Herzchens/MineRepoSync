@@ -1,0 +1,29 @@
+# Không giới hạn số lượng plugin
+repository:
+  url: "your-github-https-link-to-the-repo"
+  access_token: "ghp_yourTokenHere"  # Cho repo private
+  paths:
+    - "MMOItem"
+    - "MythicMob"
+    - "Dungeons/PluginX"
+    - "Economy/PluginY"
+
+# lệnh reload
+reload_mapping:
+  MMOItem: # 1 plugin có thể có nhiều lệnh reload
+    - "mmoitems reload"
+    - "mi reload all"
+  MythicMob:
+    - "mythicmobs reload"
+    - "mm reload skills"
+  PluginX: # Plugin khác
+    - "pluginx reload"
+  PluginY: # Plugin khác
+    - "pluginy reloadconfig"
+
+# Tùy chọn nâng cao
+options:
+  auto_sync_interval: 30  # Phút (0 = tắt)
+  conflict_handling: "backup"  # [backup, ignore, overwrite]
+  backup_dir: "backups/MineRepoSync"
+  debug: true
