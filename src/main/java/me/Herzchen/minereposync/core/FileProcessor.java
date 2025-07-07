@@ -4,7 +4,6 @@ import me.Herzchen.minereposync.MineRepoSync;
 import me.Herzchen.minereposync.config.PluginConfig;
 import me.Herzchen.minereposync.model.RepoConfig;
 import me.Herzchen.minereposync.utils.FileUtils;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,10 +35,12 @@ public class FileProcessor {
             for (String repoPath : repoConfig.getPaths()) {
                 File repoDir = new File(plugin.getDataFolder(), "repo_cache");
                 File sourceDir = new File(repoDir, repoPath);
-                File targetDir = new File("plugins");
+                File targetDir = new File("plugins", repoPath);
 
                 if (sourceDir.exists() && sourceDir.isDirectory()) {
                     processDirectory(sourceDir, targetDir, pluginChanges);
+                } else {
+                    plugin.getLogger().warning("Source directory not found: " + sourceDir.getPath());
                 }
             }
 
