@@ -5,7 +5,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Instant;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Logger {
@@ -28,13 +28,16 @@ public class Logger {
     }
 
     public void logCommand(String command, String executor, String status, List<String> changedPlugins, String error) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss:SSS");
+        String timestamp = sdf.format(new Date());
+
         List<Map<String, Object>> logs = new ArrayList<>();
         if (logConfig.contains("logs")) {
             logs = (List<Map<String, Object>>) logConfig.getList("logs");
         }
 
         Map<String, Object> entry = new LinkedHashMap<>();
-        entry.put("timestamp", Instant.now().toString());
+        entry.put("timestamp", timestamp);
         entry.put("command", command);
         entry.put("executor", executor);
         entry.put("status", status);
