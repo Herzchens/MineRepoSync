@@ -5,7 +5,6 @@ import me.Herzchen.minereposync.config.PluginConfig;
 import me.Herzchen.minereposync.model.RepoConfig;
 import org.bukkit.command.CommandSender;
 
-import java.io.File;
 import java.util.*;
 
 public class SyncEngine {
