@@ -68,6 +68,8 @@ public class GitService {
                 .call()
                 .close();
 
+        filterRepoDirectories();
+
         int fileCount = countFilesInRepo();
         plugin.getLogger().warning("Full repository cloned! Total files: " + fileCount);
         return Collections.emptySet();
@@ -101,8 +103,26 @@ public class GitService {
             }
 
             Set<String> changedFiles = getChangedFiles(repository, git, oldHead, newHead);
+
+            filterRepoDirectories();
+
             alertFileChanges(changedFiles.size());
             return changedFiles;
+        }
+    }
+
+    private void filterRepoDirectories() throws IOException {
+        logDebug("Filtering repository directories...");
+        Set<String> allowedDirs = new HashSet<>(repoConfig.getPaths());
+        File[] files = repoDir.listFiles();
+
+        if (files == null) return;
+
+        for (File file : files) {
+            if (file.isDirectory() && !file.getName().equals(".git") && !allowedDirs.contains(file.getName())) {
+                deleteDirectory(file);
+                logDebug("Deleted unused directory: " + file.getName());
+            }
         }
     }
 
