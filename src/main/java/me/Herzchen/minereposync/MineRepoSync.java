@@ -1,6 +1,7 @@
 package me.Herzchen.minereposync;
 
 import me.Herzchen.minereposync.commands.SyncCommand;
+import me.Herzchen.minereposync.commands.TabComplete;
 import me.Herzchen.minereposync.config.PluginConfig;
 import me.Herzchen.minereposync.core.SyncEngine;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,7 +17,7 @@ public class MineRepoSync extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         saveResource("log.yml", false);
-
+        getCommand("reposync").setTabCompleter(new TabComplete());
         pluginConfig = new PluginConfig(this);
         pluginConfig.load();
 
